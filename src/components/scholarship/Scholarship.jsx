@@ -111,7 +111,7 @@ const Scholarship = () => {
     });
 
     return (
-        <div className="bg-gray-900 min-h-screen rounded-lg p-4">
+        <div className="bg-gray-900 min-h-screen rounded-lg p-6">
             <div className="max-w-screen-lg mx-auto">
                 <div className="mb-4 flex space-x-4">
                     <input

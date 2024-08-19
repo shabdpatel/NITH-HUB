@@ -38,6 +38,26 @@ app.post('/add-scholarship', async (req, res) => {
     }
 });
 
+// Route to update an existing scholarship
+app.put('/scholarships/:id', async (req, res) => {
+    try {
+        const updatedScholarship = await Scholarship.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true }
+        );
+        if (!updatedScholarship) {
+            return res.status(404).send('Scholarship not found');
+        }
+        console.log('Scholarship updated successfully:', updatedScholarship);
+        res.status(200).json(updatedScholarship);
+    } catch (error) {
+        console.error('Error updating scholarship:', error);
+        res.status(400).send('Error updating scholarship');
+    }
+});
+
+
 // Route to fetch all scholarships
 app.get('/scholarships', async (req, res) => {
     try {
@@ -90,7 +110,7 @@ app.post('/send-email', (req, res) => {
     });
 });
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });

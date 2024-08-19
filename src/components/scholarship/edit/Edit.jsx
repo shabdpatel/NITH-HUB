@@ -1,7 +1,19 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const EditScholarship = ({ scholarship, onClose, onSave }) => {
-    const [formData, setFormData] = useState({ ...scholarship });
+    const [formData, setFormData] = useState({
+        title: scholarship.title || '',
+        location: scholarship.location || '',
+        date: scholarship.date || '',
+        duration: scholarship.duration || '',
+        photoLink: scholarship.photoLink || '',
+        applyLink: scholarship.applyLink || '',
+        amount: scholarship.amount || '',
+        eligibility: scholarship.eligibility || '',
+        fundingType: scholarship.fundingType || '',
+        description: scholarship.description || '',
+    });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -11,11 +23,23 @@ const EditScholarship = ({ scholarship, onClose, onSave }) => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        onSave(formData);
-        onClose();
+        console.log('Save button clicked');  // Check if this line is logged
+        console.log('Form Data:', formData); // Log the data being sent to the server
+
+        try {
+            // Make the PUT request to update the scholarship
+            const response = await axios.put(`http://localhost:5000/scholarships/${scholarship._id}`, formData);
+            console.log('Response:', response); // Check the server response
+            onSave(formData); // Optionally, you can pass the updated data back to parent
+            onClose(); // Close the modal after saving
+        } catch (error) {
+            console.error('Error updating scholarship:', error);
+            alert('Failed to save scholarship. Please try again.'); // Inform the user of the error
+        }
     };
+
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-80 overflow-scroll flex pt-44 pb-4 items-center justify-center z-50">
@@ -23,7 +47,6 @@ const EditScholarship = ({ scholarship, onClose, onSave }) => {
                 &times;
             </button>
             <div className="bg-gray-800 text-white rounded-lg shadow-md p-6 w-full max-w-lg relative">
-
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
                         <h2 className="w-full p-2 text-2xl font-semibold text-white">Edit Scholarship</h2>
@@ -62,6 +85,26 @@ const EditScholarship = ({ scholarship, onClose, onSave }) => {
                             type="text"
                             name="duration"
                             value={formData.duration}
+                            onChange={handleChange}
+                            className="w-full p-2 rounded-lg bg-gray-700 text-white"
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-400">Photo Link</label>
+                        <input
+                            type="text"
+                            name="photoLink"
+                            value={formData.photoLink}
+                            onChange={handleChange}
+                            className="w-full p-2 rounded-lg bg-gray-700 text-white"
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-400">Apply Link</label>
+                        <input
+                            type="text"
+                            name="applyLink"
+                            value={formData.applyLink}
                             onChange={handleChange}
                             className="w-full p-2 rounded-lg bg-gray-700 text-white"
                         />
